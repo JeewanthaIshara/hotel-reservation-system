@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(cuid())
+
+  clerkId String @unique
+
+  name String?
+
+  email String @unique
+
+  role UserRole @default(GUEST)
+
+  bookings Booking[]
+
+  reviews Review[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  GUEST
+
+  STAFF
+
+  ADMIN
+}
+
+model Hotel {
+  id String @id @default(cuid())
+
+  name String
+
+  description String
+
+  address String
+
+  city String
+
+  phone String?
+
+  rooms Room[]
+
+  reviews Review[]
+
+  createdAt DateTime @default(now())
+}
+
+model RoomType {
+  id String @id @default(cuid())
+
+  name String
+
+  description String
+
+  price Float
+
+  capacity Int
+
+  rooms Room[]
+
+  createdAt DateTime @default(now())
+}
+
+model Room {
+  id String @id @default(cuid())
+
+  roomNumber String
+
+  available Boolean @default(true)
+
+  hotelId String
+
+  roomTypeId String
+
+  hotel Hotel @relation(fields: [hotelId], references: [id])
+
+  roomType RoomType @relation(fields: [roomTypeId], references: [id])
+
+  bookings Booking[]
+
+  roomAmenities RoomAmenity[]
+}
+
+model Booking {
+  id String @id @default(cuid())
+
+  checkIn DateTime
+
+  checkOut DateTime
+
+  status BookingStatus @default(PENDING)
+
+  userId String
+
+  roomId String
+
+  user User @relation(fields: [userId], references: [id])
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  payment Payment?
+
+  createdAt DateTime @default(now())
+}
+
+enum BookingStatus {
+  PENDING
+
+  CONFIRMED
+
+  CHECKED_IN
+
+  CHECKED_OUT
+
+  CANCELLED
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  amount Float
+
+  status PaymentStatus @default(PENDING)
+
+  bookingId String @unique
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+
+  SUCCESS
+
+  FAILED
+
+  REFUNDED
+}
+
+model Amenity {
+  id String @id @default(cuid())
+
+  name String
+
+  rooms RoomAmenity[]
+}
+
+model RoomAmenity {
+  roomId String
+
+  amenityId String
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  amenity Amenity @relation(fields: [amenityId], references: [id])
+
+  @@id([roomId, amenityId])
+}
+
+model Review {
+  id String @id @default(cuid())
+
+  rating Int
+
+  comment String
+
+  userId String
+
+  hotelId String
+
+  user User @relation(fields: [userId], references: [id])
+
+  hotel Hotel @relation(fields: [hotelId], references: [id])
+
+  createdAt DateTime @default(now())
+}
