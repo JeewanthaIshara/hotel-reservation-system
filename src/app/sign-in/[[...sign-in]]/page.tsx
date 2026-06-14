@@ -5,11 +5,11 @@ export default function Page(){
 
 return (
 
-<div className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center">
 
-<SignIn />
+        <SignIn />
 
-</div>
+    </div>
 
 )
 

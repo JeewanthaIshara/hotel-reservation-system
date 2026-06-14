@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "RoomType" ADD COLUMN     "images" TEXT[],
+ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

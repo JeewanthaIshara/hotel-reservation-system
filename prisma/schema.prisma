@@ -55,19 +55,15 @@ model Hotel {
 }
 
 model RoomType {
-  id String @id @default(cuid())
-
-  name String
-
+  id          String   @id @default(cuid())
+  name        String
   description String
-
-  price Float
-
-  capacity Int
-
-  rooms Room[]
-
-  createdAt DateTime @default(now())
+  price       Float
+  capacity    Int
+  images      String[] // Added for Phase 3 image arrays
+  rooms       Room[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())  @updatedAt
 }
 
 model Room {

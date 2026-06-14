@@ -1,65 +1,81 @@
-import Image from "next/image";
+import { Hero } from "@/components/home/Hero";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ShieldCheck, Wifi, Coffee, Sparkles, Star } from "lucide-react";
 
-export default function Home() {
+export const metadata = {
+  title: "AuraStay | Luxury Hotel & Resort Reservations",
+  description: "Book an absolute masterpiece of comfort. Browse our elegant rooms and premium amenities.",
+};
+
+export default function PublicHomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen flex flex-col bg-background">
+      {/* 1. Hero Banner Component with embedded RoomSearch */}
+      <Hero />
+      
+      {/* 2. Premium Grid Section */}
+      <section className="container mx-auto px-4 py-20 max-w-6xl">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider">
+            <Star className="h-3.5 w-3.5 fill-current" /> World-Class Experience
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight md:text-4xl text-foreground">
+            Crafted for Unmatched Comfort
+          </h2>
+          <p className="text-muted-foreground text-base leading-relaxed">
+            Every architectural lines, design texture, and digital system has been engineered to elevate your sensory stay.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            { 
+              icon: <Wifi className="h-6 w-6" />, 
+              title: "Ultra High-Speed Wi-Fi", 
+              desc: "Gigabit fiber connectivity throughout the entire resort complex, pool decks, and lounges." 
+            },
+            { 
+              icon: <Coffee className="h-6 w-6" />, 
+              title: "Artisanal Dining", 
+              desc: "Complimentary premium morning blends and snacks curated daily by master baristas." 
+            },
+            { 
+              icon: <ShieldCheck className="h-6 w-6" />, 
+              title: "Absolute Security", 
+              desc: "Advanced smart key-card encryption layers alongside round-the-clock secure floor management." 
+            },
+            { 
+              icon: <Sparkles className="h-6 w-6" />, 
+              title: "Wellness & Spa", 
+              desc: "All-inclusive access into the heated infinity edge wellness pools and luxury dry saunas." 
+            },
+          ].map((amenity, i) => (
+            <div key={i} className="group relative p-6 border rounded-xl bg-card hover:bg-accent/20 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground p-3 rounded-lg w-max transition-colors duration-300">
+                  {amenity.icon}
+                </div>
+                <h3 className="font-semibold text-lg text-foreground tracking-tight">{amenity.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{amenity.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+        
+        {/* 3. Call To Action Conversion Block */}
+        <div className="mt-20 border rounded-2xl bg-muted/40 p-8 md:p-12 text-center max-w-4xl mx-auto space-y-6 shadow-inner">
+          <h3 className="text-2xl md:text-3xl font-bold tracking-tight">Ready to Secure Your Sanctuary?</h3>
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+            Browse our verified inventory of luxury suites, view detailed layouts, and complete your reservation instantly through our protected booking flow.
+          </p>
+          <div className="pt-2">
+            <Button size="lg" className="font-semibold px-8 h-12 shadow-md hover:shadow-lg transition-all" asChild>
+              <Link href="/rooms">Explore Available Rooms</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
