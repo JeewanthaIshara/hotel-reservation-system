@@ -1,157 +1,124 @@
-
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
 });
-
 
 const prisma = new PrismaClient({
   adapter,
 });
 
 async function main() {
+  console.log("🔄 Seeding started...");
 
-
-  // Create Hotel
-
+  // 1. Create Hotel
   const hotel = await prisma.hotel.create({
     data: {
       name: "Ocean View Resort",
-      description:
-        "Luxury beachfront hotel with modern facilities.",
+      description: "Luxury beachfront hotel with modern facilities.",
       address: "Beach Road",
       city: "Colombo",
       phone: "+94112223344",
     },
   });
 
-
-
-  // Create Room Types
-
+  // 2. Create Room Types
   const deluxe = await prisma.roomType.create({
     data: {
       name: "Deluxe Room",
-      description:
-        "Comfortable room with ocean view.",
+      description: "Comfortable room with ocean view.",
       price: 150,
       capacity: 2,
+      images: ["https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"],
     },
   });
-
-
 
   const suite = await prisma.roomType.create({
     data: {
       name: "Luxury Suite",
-      description:
-        "Premium suite with living area.",
+      description: "Premium suite with living area.",
       price: 300,
       capacity: 4,
+      images: ["https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80"],
     },
   });
 
-
-
-  // Create Rooms
-
-
-  const room1 = await prisma.room.create({
+  // 3. Create Rooms (Linked to Hotel and RoomTypes)
+  await prisma.room.create({
     data: {
       roomNumber: "101",
       hotelId: hotel.id,
       roomTypeId: deluxe.id,
+      status: "CLEAN",
     },
   });
 
-
-  const room2 = await prisma.room.create({
+  await prisma.room.create({
     data: {
       roomNumber: "102",
       hotelId: hotel.id,
       roomTypeId: deluxe.id,
+      status: "CLEAN",
     },
   });
 
-
-  const room3 = await prisma.room.create({
+  await prisma.room.create({
     data: {
       roomNumber: "201",
       hotelId: hotel.id,
       roomTypeId: suite.id,
+      status: "CLEAN",
     },
   });
 
-
-
-  // Create Amenities
-
-
+  // 4. Create Base Amenities
   const wifi = await prisma.amenity.create({
-    data:{
-      name:"Free WiFi"
-    }
+    data: { name: "Free WiFi", icon: "Wifi" }
   });
-
 
   const pool = await prisma.amenity.create({
-    data:{
-      name:"Swimming Pool"
-    }
+    data: { name: "Swimming Pool", icon: "Waves" }
   });
-
 
   const parking = await prisma.amenity.create({
-    data:{
-      name:"Parking"
-    }
+    data: { name: "Parking", icon: "Car" }
   });
 
-
-
-  // Connect amenities
-
-
-  await prisma.roomAmenity.createMany({
-    data:[
+  // 5. Connect Amenities to RoomTypes using your 'TypeAmenity' model
+  await prisma.typeAmenity.createMany({
+    data: [
       {
-        roomId: room1.id,
-        amenityId: wifi.id
+        roomTypeId: deluxe.id,
+        amenityId: wifi.id,
       },
       {
-        roomId: room1.id,
-        amenityId: pool.id
+        roomTypeId: deluxe.id,
+        amenityId: pool.id,
       },
       {
-        roomId: room2.id,
-        amenityId: wifi.id
+        roomTypeId: suite.id,
+        amenityId: wifi.id,
       },
       {
-        roomId: room3.id,
-        amenityId: parking.id
-      }
-    ]
+        roomTypeId: suite.id,
+        amenityId: pool.id,
+      },
+      {
+        roomTypeId: suite.id,
+        amenityId: parking.id,
+      },
+    ],
   });
 
-
-  console.log("Seed completed");
-
+  console.log("🎉 Seed completed successfully!");
 }
 
-
 main()
-.catch((error)=>{
-
-console.error(error);
-
-process.exit(1);
-
-})
-.finally(async()=>{
-
-await prisma.$disconnect();
-
-});
+  .catch((error) => {
+    console.error("❌ Seed failed:", error);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
