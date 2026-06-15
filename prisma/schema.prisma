@@ -55,35 +55,37 @@ model Hotel {
 }
 
 model RoomType {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
   description String
   price       Float
   capacity    Int
-  images      String[] // Added for Phase 3 image arrays
+  images      String[]      
   rooms       Room[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())  @updatedAt
+  // 🟢 NEW: Direct relational link to Type-specific perks
+  amenities   TypeAmenity[] 
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
 }
 
 model Room {
-  id String @id @default(cuid())
+  id          String        @id @default(cuid())
+  roomNumber  String
+  available   Boolean       @default(true) // Online Booking Status (Visible to Guests)
+  status      RoomStatus    @default(CLEAN) // Operational Status (Visible to Admin/Staff)
+  hotelId     String
+  roomTypeId  String
 
-  roomNumber String
+  hotel       Hotel         @relation(fields: [hotelId], references: [id])
+  roomType    RoomType      @relation(fields: [roomTypeId], references: [id])
+  bookings    Booking[]
+}
 
-  available Boolean @default(true)
-
-  hotelId String
-
-  roomTypeId String
-
-  hotel Hotel @relation(fields: [hotelId], references: [id])
-
-  roomType RoomType @relation(fields: [roomTypeId], references: [id])
-
-  bookings Booking[]
-
-  roomAmenities RoomAmenity[]
+// 🟢 NEW: Operational states for internal staff and frontline actions
+enum RoomStatus {
+  CLEAN               // Ready for immediate check-in
+  DIRTY               // Needs housekeeping attention post checkout
+  UNDER_MAINTENANCE   // Blocked due to repairs/maintenance issues
 }
 
 model Booking {
@@ -145,23 +147,21 @@ enum PaymentStatus {
 }
 
 model Amenity {
-  id String @id @default(cuid())
-
-  name String
-
-  rooms RoomAmenity[]
+  id        String        @id @default(cuid())
+  name      String        @unique // Prevents creating duplicate text values
+  icon      String?       // Optional: Stores Lucide icon string tags (e.g., "Wifi", "Tv")
+  roomTypes TypeAmenity[] 
 }
 
-model RoomAmenity {
-  roomId String
+/// Clean intermediate cross-reference table joining RoomTypes and Amenities
+model TypeAmenity {
+  roomTypeId String
+  amenityId  String
 
-  amenityId String
+  roomType   RoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  amenity    Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
 
-  room Room @relation(fields: [roomId], references: [id])
-
-  amenity Amenity @relation(fields: [amenityId], references: [id])
-
-  @@id([roomId, amenityId])
+  @@id([roomTypeId, amenityId])
 }
 
 model Review {

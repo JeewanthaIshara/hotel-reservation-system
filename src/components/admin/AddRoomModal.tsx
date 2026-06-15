@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createPhysicalRoom } from "@/actions/rooms";
+import { createPhysicalRoom } from "@/actions/rooms"; // Maps to your physical rooms action file
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -41,7 +41,7 @@ export function AddRoomModal({ roomTypes }: AddRoomModalProps) {
       const result = await createPhysicalRoom(payload);
       if (result.success) {
         setOpen(false);
-        (event.target as HTMLFormElement).reset(); // Wipe inputs
+        (event.target as HTMLFormElement).reset(); // Clean up inputs on success
       }
     } catch (err: any) {
       setError(err.message || "Could not map target structure registry profile.");
@@ -57,7 +57,7 @@ export function AddRoomModal({ roomTypes }: AddRoomModalProps) {
           <Plus className="h-4 w-4" /> Add Physical Room
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-100">
         <form onSubmit={handleSubmit} className="space-y-5">
           <DialogHeader>
             <DialogTitle>Map Physical Inventory Unit</DialogTitle>
@@ -99,7 +99,7 @@ export function AddRoomModal({ roomTypes }: AddRoomModalProps) {
 
           <DialogFooter className="pt-2 border-t">
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={loading}>Cancel</Button>
-            <Button type="submit" disabled={loading} className="min-w-[100px]">
+            <Button type="submit" disabled={loading} className="min-w-25">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Link Unit"}
             </Button>
           </DialogFooter>

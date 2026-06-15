@@ -10,20 +10,32 @@ export default async function SyncUserPage() {
   const { userId } = await auth();
   const user = await currentUser();
 
+  // 1. Immediate exit safety guard for unauthenticated traffic
   if (!userId || !user) {
-    redirect("/");
+    return redirect("/");
   }
 
-  // Extract the primary email address safely
+  // 2. Safely extract and clean the email address string
   const userEmail = user.emailAddresses[0]?.emailAddress?.toLowerCase()?.trim();
-  const isAdmin = userEmail && ADMIN_EMAILS.map(e => e.toLowerCase().trim()).includes(userEmail);
+  
+  if (!userEmail) {
+    return redirect("/");
+  }
 
-  // 🔀 The Decision Engine: Separate the traffic completely
+  // 3. Evaluate role status cleanly
+  const isAdmin = ADMIN_EMAILS.map(e => e.toLowerCase().trim()).includes(userEmail);
+
+  // 4. Declare a single fallback destination path
+  let targetDestination = "/dashboard";
+
   if (isAdmin) {
     console.log(`⚡ Admin detected (${userEmail}). Routing to Management Panel.`);
-    redirect("/admin");
+    targetDestination = "/admin";
   } else {
     console.log(`👤 Customer detected (${userEmail}). Routing to Guest Portal.`);
-    redirect("/user/dashboard");
+    targetDestination = "/dashboard";
   }
+
+  // 5. Final singular redirect call to prevent Next.js routing runtime crashes
+  return redirect(targetDestination);
 }

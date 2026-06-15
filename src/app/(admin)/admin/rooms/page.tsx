@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { BedDouble } from "lucide-react";
 import { AddRoomModal } from "@/components/admin/AddRoomModal";
+import { RoomStatusSelect } from "@/components/admin/RoomStatusSelect";
 
 export const revalidate = 0; // Fresh database query on every page load
 
@@ -48,10 +49,10 @@ export default async function AdminRoomsPage() {
         <Table>
           <TableHeader className="bg-muted/50">
             <TableRow>
-              <TableHead className="w-[120px]">Room Number</TableHead>
+              <TableHead className="w-30">Room Number</TableHead>
               <TableHead>Assigned Classification</TableHead>
-              <TableHead>Current Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Booking Availability</TableHead>
+              <TableHead className="text-right w-50">Housekeeping Control</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -73,19 +74,18 @@ export default async function AdminRoomsPage() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    {/* 🪛 FIX: Read room.available (boolean) instead of room.status (string) */}
+                    {/* Visual indicator reflecting guest-facing system visibility */}
                     <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       room.available 
-                        ? "bg-emerald-100 text-emerald-800" 
-                        : "bg-amber-100 text-amber-800"
+                        ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400" 
+                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
                     }`}>
-                      {room.available ? "AVAILABLE" : "OCCUPIED / MAINTENANCE"}
+                      {room.available ? "ONLINE / BOOKABLE" : "OFFLINE LOCK"}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <button className="text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
-                      Configure Unit
-                    </button>
+                  <TableCell className="flex justify-end items-center pt-3">
+                    {/* 🟢 NEW: Integrated Live State Controller Dropdown */}
+                    <RoomStatusSelect roomId={room.id} currentStatus={room.status} />
                   </TableCell>
                 </TableRow>
               ))

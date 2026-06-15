@@ -9,7 +9,8 @@ import {
   Sliders, 
   CalendarCheck, 
   Users, 
-  Building 
+  Building,
+  Banknote
 } from "lucide-react";
 
 const links = [
@@ -18,6 +19,7 @@ const links = [
   { href: "/admin/room-types", label: "Room Types", icon: Sliders },
   { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
   { href: "/admin/customers", label: "Customers", icon: Users },
+  { href: "/admin/payments", label: "Financial Ledger", icon: Banknote }, // 🟢 Added Financial Link
 ];
 
 export function AdminSidebar() {

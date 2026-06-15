@@ -1,6 +1,17 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default clerkMiddleware();
+// 🔐 Define which routes require an authenticated session
+const isProtectedRoute = createRouteMatcher([
+  "/sync-user(.*)",
+  "/dashboard(.*)",
+  "/admin(.*)",
+]);
+
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) {
+    await auth.protect(); // Protects the route and forces a clear authentication state
+  }
+});
 
 export const config = {
   matcher: [
