@@ -155,34 +155,6 @@ export default function Home() {
           <motion.p variants={fadeInUp} className="text-white/80 text-base sm:text-xl max-w-xl mb-10 font-normal leading-relaxed drop-shadow-sm">
             Discover world-class hotels tailored to every journey. Seamless reservation architectural matrices, exceptional localized stays.
           </motion.p>
-
-          {/* Quick Search Strip */}
-          <motion.div variants={fadeInUp} className="w-full max-w-3xl bg-card rounded-2xl shadow-2xl border border-border p-4 text-left">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5 ml-1">Check-in</label>
-                <input type="date" className="w-full px-3 py-2.5 bg-muted rounded-xl text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 font-medium" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5 ml-1">Check-out</label>
-                <input type="date" className="w-full px-3 py-2.5 bg-muted rounded-xl text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 font-medium" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5 ml-1">Guests</label>
-                <select className="w-full px-3 py-2.5 bg-muted rounded-xl text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 font-medium appearance-none">
-                  <option>2 Guests</option>
-                  <option>1 Guest</option>
-                  <option>4 Guests</option>
-                </select>
-              </div>
-              <Button size="lg" className="w-full rounded-xl text-xs font-bold uppercase tracking-wider py-6 group relative overflow-hidden" asChild>
-                <Link href="/rooms">
-                  <Search size={14} className="mr-2" /> 
-                  <span className="relative z-10 flex items-center">Search Rooms</span>
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
         </motion.div>
       </section>
 
